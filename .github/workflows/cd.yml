@@ -9,12 +9,11 @@ defaults:
     shell: pwsh
 
 env:
-  dotnet-version: "3.1.x"
+  go-version: "1.14"
 
 jobs:
   pub-images:
     runs-on: ubuntu-latest
-    steps:
     steps:
     - name: Checkout
       uses: actions/checkout@v2

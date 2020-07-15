@@ -46,3 +46,10 @@ Task Run -depends Build {
     $env:LOMENT_PORT = "4000"
     Exec { ./loment }
 }
+
+Task Docker {
+    Exec { docker-compose up -d db }
+    Start-Sleep -Seconds 10
+    Exec { docker-compose up -d }
+    Start-Sleep -Seconds 5
+}
