@@ -56,7 +56,7 @@ jobs:
         NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
       run: |
         Set-Location ./sdk
-        Invoke-psake -buildFile ../psakefile.sdk.ps1 -taskList cd -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
+        Invoke-psake cd -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:

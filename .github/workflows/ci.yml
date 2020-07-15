@@ -35,8 +35,6 @@ jobs:
       run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
     - name: CI for loment
       run: Invoke-psake ci
-    - name: Start loment
-      run: Invoke-psake run
     - name: CI for SDK
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
@@ -46,7 +44,7 @@ jobs:
         start-job -scriptblock { invoke-psake run }
         Start-Sleep -Seconds 5
         Set-Location ./sdk
-        Invoke-psake -buildFile ../psakefile.sdk.ps1 -taskList ci -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
+        Invoke-psake ci -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
     - name: Upload reports
       uses: actions/upload-artifact@v2
       with:
