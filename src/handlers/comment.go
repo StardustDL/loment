@@ -7,8 +7,10 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	uuid "github.com/satori/go.uuid"
 
 	"loment/models"
+	"loment/repositories"
 )
 
 type contextKey string
@@ -17,42 +19,84 @@ var (
 	idKey contextKey = "id"
 )
 
-// All get all comment
-func All(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte(fmt.Sprintf("id:%s", "abc")))
+// CommentHandler core handler
+type CommentHandler struct {
+	Repo *repositories.CommentRepository
 }
 
-// Create create comment
-func Create(w http.ResponseWriter, r *http.Request) {
-	id := r.Context().Value(idKey).(string)
-	w.Write([]byte(fmt.Sprintf("id:%s", id)))
+// Create create comment, return id
+func (handler *CommentHandler) Create(w http.ResponseWriter, r *http.Request) {
+	cmt := new(models.Comment)
+	err := json.NewDecoder(r.Body).Decode(cmt)
+	if err != nil {
+		respondErrWithError(w, err)
+		return
+	}
+	if cmt.ID == "" {
+		cmt.ID = uuid.NewV4().String()
+	}
+	err = handler.Repo.Create(cmt)
+	if err != nil {
+		respondErrWithError(w, err)
+		return
+	}
+	respondOkWithString(w, cmt.ID)
 }
 
 // Get get comment
-func Get(w http.ResponseWriter, r *http.Request) {
+func (handler *CommentHandler) Get(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value(idKey).(string)
-	result := models.Comment{
-		ID: id,
+	result, err := handler.Repo.Get(id)
+	if err != nil {
+		respondErrWithError(w, err)
+		return
 	}
 	respondOkWithObject(w, result)
 }
 
-// Delete delete comment
-func Delete(w http.ResponseWriter, r *http.Request) {
+// Delete delete comment, return id
+func (handler *CommentHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value(idKey).(string)
-	w.Write([]byte(fmt.Sprintf("id:%s", id)))
+	_, err := handler.Repo.Delete(id)
+	if err != nil {
+		respondErrWithError(w, err)
+		return
+	}
+	respondOkWithObject(w, true)
 }
 
-// Update update comment
-func Update(w http.ResponseWriter, r *http.Request) {
+// Update update comment, return id
+func (handler *CommentHandler) Update(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value(idKey).(string)
-	w.Write([]byte(fmt.Sprintf("id:%s", id)))
+	cmt := new(models.Comment)
+	err := json.NewDecoder(r.Body).Decode(cmt)
+	if err != nil {
+		respondErrWithError(w, err)
+		return
+	}
+	cmt.ID = id
+	err = handler.Repo.Update(cmt)
+	if err != nil {
+		respondErrWithError(w, err)
+		return
+	}
+	respondOkWithObject(w, true)
 }
 
-// Query query comments
-func Query(w http.ResponseWriter, r *http.Request) {
-	result := [5]models.Comment{}
-	respondOkWithObject(w, result)
+// Query query comments return list of comment
+func (handler *CommentHandler) Query(w http.ResponseWriter, r *http.Request) {
+	cmt := new(models.CommentQuery)
+	err := json.NewDecoder(r.Body).Decode(cmt)
+	if err != nil {
+		respondErrWithError(w, err)
+		return
+	}
+	cmts, err := handler.Repo.Query(cmt)
+	if err != nil {
+		respondErrWithError(w, err)
+		return
+	}
+	respondOkWithObject(w, cmts)
 }
 
 // ParamID parse id from url
@@ -62,6 +106,16 @@ func ParamID(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), idKey, id)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func respondErrWithError(w http.ResponseWriter, err error) {
+	w.WriteHeader(http.StatusBadRequest)
+	w.Write([]byte(fmt.Sprintf("%v", err)))
+}
+
+func respondOkWithString(w http.ResponseWriter, str string) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(str))
 }
 
 func respondOkWithObject(w http.ResponseWriter, payload interface{}) {

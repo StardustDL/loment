@@ -11,6 +11,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 
 	"loment/handlers"
+	"loment/repositories"
 )
 
 func main() {
@@ -24,6 +25,25 @@ func main() {
 		}
 	}
 
+	dbSource := os.Getenv("LOMENT_DBORIGIN")
+	dbName := os.Getenv("LOMENT_DBNAME")
+	debug := os.Getenv("LOMENT_DEBUG")
+	repo := repositories.Create(dbSource, dbName)
+
+	err := repo.EnsureExisits()
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		return
+	}
+
+	err = repo.Start(debug != "")
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		return
+	}
+
+	defer repo.Stop()
+
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -33,15 +53,17 @@ func main() {
 
 	r.Use(middleware.Timeout(60 * time.Second))
 
+	handler := new(handlers.CommentHandler)
+	handler.Repo = repo
+
 	r.Route("/", func(r chi.Router) {
-		r.Get("/", handlers.All)
-		r.Post("/", handlers.Create)
-		r.Post("/query", handlers.Query)
+		r.Post("/", handler.Create)     // comment -> id
+		r.Post("/query", handler.Query) // commentQuery -> list[comment]
 		r.Route("/{id}", func(r chi.Router) {
 			r.Use(handlers.ParamID)
-			r.Get("/", handlers.Get)
-			r.Delete("/", handlers.Delete)
-			r.Put("/", handlers.Update)
+			r.Get("/", handler.Get)       // id -> comment
+			r.Delete("/", handler.Delete) // id -> bool
+			r.Put("/", handler.Update)    // id, comment -> bool
 		})
 	})
 
