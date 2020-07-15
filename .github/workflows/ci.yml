@@ -29,3 +29,13 @@ jobs:
       run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
     - name: CI
       run: Invoke-psake ci
+  invoke-cd:
+    needs: ci
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    steps:
+    - name: Repository Dispatch
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.PA_TOKEN }}
+        event-type: cd
