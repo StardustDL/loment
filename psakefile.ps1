@@ -40,6 +40,6 @@ Task Report {
 
 Task Run -depends Build {
     Set-Location ./dist
-    $env:LOMENT_PORT = "3000"
+    $env:LOMENT_PORT = "4000"
     Exec { ./loment }
 }

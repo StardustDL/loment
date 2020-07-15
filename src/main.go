@@ -36,6 +36,7 @@ func main() {
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", handlers.All)
 		r.Post("/", handlers.Create)
+		r.Post("/query", handlers.Query)
 		r.Route("/{id}", func(r chi.Router) {
 			r.Use(handlers.ParamID)
 			r.Get("/", handlers.Get)
