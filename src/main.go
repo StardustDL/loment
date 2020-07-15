@@ -58,7 +58,7 @@ func main() {
 
 	r.Route("/", func(r chi.Router) {
 		r.Post("/", handler.Create)     // comment -> id
-		r.Post("/query", handler.Query) // commentQuery -> list[comment]
+		r.Post("/query", handler.Query) // commentQuery -> list[comment] or null
 		r.Route("/{id}", func(r chi.Router) {
 			r.Use(handlers.ParamID)
 			r.Get("/", handler.Get)       // id -> comment

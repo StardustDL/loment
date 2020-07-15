@@ -10,6 +10,8 @@ defaults:
 
 env:
   go-version: "1.14"
+  dotnet-version: "3.1.x"
+  build_version: "0.0.1.${{ github.run_number }}-preview"
 
 jobs:
   ci:
@@ -25,10 +27,31 @@ jobs:
       uses: actions/setup-go@v1
       with:
         go-version: ${{ env.go-version }}
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.dotnet-version }}
     - name: Setup psake
       run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
-    - name: CI
+    - name: CI for loment
       run: Invoke-psake ci
+    - name: Start loment
+      run: Invoke-psake run
+    - name: CI for SDK
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
+      run: |
+        docker run -d --security-opt seccomp:unconfined -p 3306:3306 --name mymysql -e MYSQL_ROOT_PASSWORD=123456 mysql:latest || exit $LASTEXITCODE
+        Start-Sleep -Seconds 10
+        start-job -scriptblock { invoke-psake run }
+        Start-Sleep -Seconds 5
+        Set-Location ./sdk
+        Invoke-psake -buildFile ../psakefile.sdk.ps1 -taskList ci -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
+    - name: Upload reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: ci-sdk
+        path: ./sdk/reports
   invoke-cd:
     needs: ci
     runs-on: ubuntu-latest

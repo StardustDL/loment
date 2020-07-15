@@ -39,12 +39,11 @@ Task Report {
 }
 
 Task Run -depends Build {
-    # docker run --rm --security-opt seccomp:unconfined  -p 3306:3306 --name mymysql -e MYSQL_ROOT_PASSWORD=123456 mysql:latest
     Set-Location ./dist
     $env:LOMENT_DBORIGIN = "root:123456@(localhost:3306)"
     $env:LOMENT_DBNAME = "loment_db"
     $env:LOMENT_PORT = "4000"
-    Exec { ./loment }
+    Exec { ./loment.exe }
 }
 
 Task Docker {
