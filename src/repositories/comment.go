@@ -98,8 +98,8 @@ func (repo *CommentRepository) Query(query *models.CommentQuery) ([]models.Comme
 	if query.Location != "" {
 		session = session.Where("Location = ?", query.Location)
 	}
-	if query.Nick != "" {
-		session = session.Where("Nick = ?", query.Nick)
+	if query.Nickname != "" {
+		session = session.Where("Nickname = ?", query.Nickname)
 	}
 	if query.Mail != "" {
 		session = session.Where("Mail = ?", query.Mail)

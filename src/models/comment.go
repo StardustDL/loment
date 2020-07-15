@@ -10,7 +10,7 @@ type Comment struct {
 	ModificationTime time.Time
 	Content          string
 	Location         string
-	Nick             string
+	Nickname         string
 	Mail             string
 	Link             string
 }
@@ -21,7 +21,7 @@ type CommentQuery struct {
 	ModificationTime time.Time
 	Content          string
 	Location         string
-	Nick             string
+	Nickname         string
 	Mail             string
 	Link             string
 	Offset           int
