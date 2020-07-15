@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  go-version: "1.14"
+
+jobs:
+  ci:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: ${{ env.go-version }}
+    - name: Setup psake
+      run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
+    - name: CI
+      run: Invoke-psake ci
