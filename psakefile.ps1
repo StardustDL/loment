@@ -18,7 +18,7 @@ Task Build {
         New-Item -Path "dist" -ItemType Directory
     }
     Set-Location src
-    go build -v -o ../dist/loment
+    go build -v -o ../dist/loment.exe
     Set-Location ..
 }
 
@@ -36,4 +36,10 @@ Task Benchmark {
 }
 
 Task Report {
+}
+
+Task Run -depends Build {
+    Set-Location ./dist
+    $env:LOMENT_PORT = "3000"
+    Exec { ./loment }
 }

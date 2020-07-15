@@ -2,6 +2,7 @@ reports
 temp
 packages
 .vscode
+dist
 
 # Binaries for programs and plugins
 *.exe

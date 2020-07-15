@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+defaults:
+  run:
+    shell: pwsh
+
 env:
   go-version: "1.14"
 
