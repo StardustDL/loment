@@ -18,6 +18,7 @@ Task Build {
         New-Item -Path "dist" -ItemType Directory
     }
     Set-Location src
+    $env:CGO_ENABLED = 0
     Exec { go build -v -o ../dist/loment.exe }
     Set-Location ..
 }
