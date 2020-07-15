@@ -40,6 +40,15 @@ jobs:
         repository: stardustdl/loment
         tag_with_ref: true
         dockerfile: ./Dockerfile
+    - name: Mirror image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.MIRROR_DOCKER_USERNAME }}
+        password: ${{ secrets.MIRROR_DOCKER_PASSWORD }}
+        registry: ${{ secrets.MIRROR_DOCKER_REGISTRY }}
+        repository: stardustdl/loment
+        tags: latest
+        dockerfile: ./Dockerfile
   pub-pkgs:
     runs-on: ubuntu-latest
     steps:
