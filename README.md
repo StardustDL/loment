@@ -68,4 +68,4 @@ public interface ILomentService
 
 ## Status
 
-![](https://buildstats.info/github/chart/StardustDL/Loment?branch=master)
+![](https://buildstats.info/github/chart/StardustDL/loment?branch=master)
