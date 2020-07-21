@@ -12,11 +12,11 @@ namespace Loment.Models
 
         public string? Content { get; set; }
 
-        public string? Location { get; set; }
+        public string? Uri { get; set; }
 
-        public string? Nickname { get; set; }
+        public string? Author { get; set; }
 
-        public string? Mail { get; set; }
+        public string? Email { get; set; }
 
         public string? Link { get; set; }
 

@@ -1,6 +1,6 @@
 # loment
 
-![CI](https://github.com/StardustDL/loment/workflows/CI/badge.svg) ![CD](https://github.com/StardustDL/loment/workflows/CD/badge.svg) ![License](https://img.shields.io/github/license/StardustDL/loment.svg)
+![CI](https://github.com/StardustDL/loment/workflows/CI/badge.svg) ![CD](https://github.com/StardustDL/loment/workflows/CD/badge.svg) ![License](https://img.shields.io/github/license/StardustDL/loment.svg) [![Loment](https://buildstats.info/nuget/Loment)](https://www.nuget.org/packages/Loment/)
 
 Loment is a Light cOmMENT service.
 
@@ -8,32 +8,33 @@ Loment is a Light cOmMENT service.
 
 - **Post** `/` with *Comment* body: Create comment, return id
 - **Post** `/query` with *CommentQuery* body: Query comments, return list of comments
-- **Get** `/id`: Get comment by id
-- **Delete** `/id`: Delete comment by id
-- **Put** `/id` with *Comment* body: Update comment by id
+- **Get** `/id`: Get comment by id, return comment
+- **Delete** `/id`: Delete comment by id, return if done
+- **Put** `/id` with *Comment* body: Update comment by id, return if done
 
 ## Models
 
 ```go
 type Comment struct {
-	ID               string
+	Id               string
 	CreationTime     time.Time
 	ModificationTime time.Time
 	Content          string
-	Location         string
-	Nickname         string
-	Mail             string
+	Uri              string
+	Author           string
+	Email            string
 	Link             string
+	Extra            string
 }
 
 type CommentQuery struct {
-	ID               string
+	Id               string
 	CreationTime     time.Time
 	ModificationTime time.Time
 	Content          string
-	Location         string
-	Nickname         string
-	Mail             string
+	Uri              string
+	Author           string
+	Email            string
 	Link             string
 	Offset           int
 	Limit            int
@@ -64,3 +65,7 @@ public interface ILomentService
     Task<bool> Update(Comment comment, CancellationToken cancellationToken = default);
 }
 ```
+
+## Status
+
+![](https://buildstats.info/github/chart/StardustDL/Loment?branch=master)

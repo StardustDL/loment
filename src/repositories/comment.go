@@ -69,7 +69,7 @@ func (repo *CommentRepository) Create(obj *models.Comment) error {
 // Get by id
 func (repo *CommentRepository) Get(id string) (*models.Comment, error) {
 	var result models.Comment
-	has, err := repo.engine.Where("ID = ?", id).Get(&result)
+	has, err := repo.engine.Where("Id = ?", id).Get(&result)
 	if has {
 		return &result, err
 	}
@@ -78,31 +78,31 @@ func (repo *CommentRepository) Get(id string) (*models.Comment, error) {
 
 // Update by id
 func (repo *CommentRepository) Update(obj *models.Comment) error {
-	_, err := repo.engine.Where("ID = ?", obj.ID).Update(obj)
+	_, err := repo.engine.Where("Id = ?", obj.Id).Update(obj)
 	return err
 }
 
 // Delete by id
 func (repo *CommentRepository) Delete(id string) (*models.Comment, error) {
 	var obj models.Comment
-	_, err := repo.engine.Where("ID = ?", id).Delete(&obj)
+	_, err := repo.engine.Where("Id = ?", id).Delete(&obj)
 	return &obj, err
 }
 
 // Query comments
 func (repo *CommentRepository) Query(query *models.CommentQuery) ([]models.Comment, error) {
 	session := repo.engine.Select("*")
-	if query.ID != "" {
-		session = session.Where("ID = ?", query.ID)
+	if query.Id != "" {
+		session = session.Where("Id = ?", query.Id)
 	}
-	if query.Location != "" {
-		session = session.Where("Location = ?", query.Location)
+	if query.Uri != "" {
+		session = session.Where("Uri = ?", query.Uri)
 	}
-	if query.Nickname != "" {
-		session = session.Where("Nickname = ?", query.Nickname)
+	if query.Author != "" {
+		session = session.Where("Author = ?", query.Author)
 	}
-	if query.Mail != "" {
-		session = session.Where("Mail = ?", query.Mail)
+	if query.Email != "" {
+		session = session.Where("Email = ?", query.Email)
 	}
 	if query.Limit == 0 {
 		query.Limit = 10

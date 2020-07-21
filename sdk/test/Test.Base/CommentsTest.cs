@@ -26,7 +26,9 @@ namespace Test.Base
         {
             var comment = new Comment
             {
-                Content = "abc"
+                Content = "abc",
+                CreationTime = DateTimeOffset.Now,
+                Uri = "abc"
             };
             var id = await Service.Create(comment);
             Assert.IsNotNull(id);
@@ -34,12 +36,14 @@ namespace Test.Base
             var res = await Service.Get(id);
 
             Assert.AreEqual(comment.Content, res.Content);
+            Assert.IsTrue((comment.CreationTime - res.CreationTime).TotalSeconds < 60);
 
             {
                 var updated = await Service.Update(new Comment
                 {
-                    ID = id,
-                    Content = "abcd"
+                    Id = id,
+                    Content = "abcd",
+                    Uri = "abc"
                 });
                 Assert.IsTrue(updated);
 
@@ -47,6 +51,12 @@ namespace Test.Base
 
                 Assert.AreEqual("abcd", res2.Content);
             }
+
+            var items = await Service.Query(new CommentQuery
+            {
+                Uri = "abc"
+            });
+            Assert.IsTrue(items.Count > 0);
 
             var del = await Service.Delete(id);
             Assert.IsTrue(del);

@@ -66,7 +66,7 @@ namespace Loment
 
         public async Task<bool> Update(Comment comment, CancellationToken cancellationToken = default)
         {
-            var response = await Client.PutAsJsonAsync($"/{Uri.EscapeDataString(comment.ID)}", comment, cancellationToken).ConfigureAwait(false);
+            var response = await Client.PutAsJsonAsync($"/{Uri.EscapeDataString(comment.Id)}", comment, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<bool>(cancellationToken: cancellationToken);
         }

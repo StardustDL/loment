@@ -5,24 +5,25 @@ import (
 )
 
 type Comment struct {
-	ID               string
+	Id               string
 	CreationTime     time.Time
 	ModificationTime time.Time
 	Content          string
-	Location         string
-	Nickname         string
-	Mail             string
+	Uri              string
+	Author           string
+	Email            string
 	Link             string
+	Extra            string
 }
 
 type CommentQuery struct {
-	ID               string
+	Id               string
 	CreationTime     time.Time
 	ModificationTime time.Time
 	Content          string
-	Location         string
-	Nickname         string
-	Mail             string
+	Uri              string
+	Author           string
+	Email            string
 	Link             string
 	Offset           int
 	Limit            int

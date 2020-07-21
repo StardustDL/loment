@@ -32,15 +32,15 @@ func (handler *CommentHandler) Create(w http.ResponseWriter, r *http.Request) {
 		respondErrWithError(w, err)
 		return
 	}
-	if cmt.ID == "" {
-		cmt.ID = uuid.NewV4().String()
+	if cmt.Id == "" {
+		cmt.Id = uuid.NewV4().String()
 	}
 	err = handler.Repo.Create(cmt)
 	if err != nil {
 		respondErrWithError(w, err)
 		return
 	}
-	respondOkWithString(w, cmt.ID)
+	respondOkWithString(w, cmt.Id)
 }
 
 // Get get comment
@@ -74,7 +74,7 @@ func (handler *CommentHandler) Update(w http.ResponseWriter, r *http.Request) {
 		respondErrWithError(w, err)
 		return
 	}
-	cmt.ID = id
+	cmt.Id = id
 	err = handler.Repo.Update(cmt)
 	if err != nil {
 		respondErrWithError(w, err)
@@ -99,7 +99,7 @@ func (handler *CommentHandler) Query(w http.ResponseWriter, r *http.Request) {
 	respondOkWithObject(w, cmts)
 }
 
-// ParamID parse id from url
+// ParamId parse id from url
 func ParamID(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		id := chi.URLParam(r, "id")
