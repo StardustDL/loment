@@ -91,7 +91,7 @@ func (repo *CommentRepository) Delete(id string) (*models.Comment, error) {
 
 // Query comments
 func (repo *CommentRepository) Query(query *models.CommentQuery) ([]models.Comment, error) {
-	session := repo.engine.Select("*")
+	session := repo.engine.NewSession()
 	if query.Id != "" {
 		session = session.Where("Id = ?", query.Id)
 	}
@@ -108,7 +108,6 @@ func (repo *CommentRepository) Query(query *models.CommentQuery) ([]models.Comme
 		query.Limit = 10
 	}
 	var result []models.Comment
-	fmt.Printf("%v", result)
 	err := session.Limit(query.Limit, query.Offset).Find(&result)
 	return result, err
 }
