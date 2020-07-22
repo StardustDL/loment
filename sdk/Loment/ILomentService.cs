@@ -15,6 +15,8 @@ namespace Loment
 
         Task<IList<Comment>> Query(CommentQuery query, CancellationToken cancellationToken = default);
 
+        Task<long> Count(CommentQuery query, CancellationToken cancellationToken = default);
+
         Task<Comment?> Get(string id, CancellationToken cancellationToken = default);
 
         Task<bool> Delete(string id, CancellationToken cancellationToken = default);
@@ -62,6 +64,14 @@ namespace Loment
             {
                 return result;
             }
+        }
+
+        public async Task<long> Count(CommentQuery query, CancellationToken cancellationToken = default)
+        {
+            var response = await Client.PostAsJsonAsync("/count", query, cancellationToken).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<long>(cancellationToken: cancellationToken);
+            return result;
         }
 
         public async Task<bool> Update(Comment comment, CancellationToken cancellationToken = default)

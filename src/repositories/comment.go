@@ -111,3 +111,23 @@ func (repo *CommentRepository) Query(query *models.CommentQuery) ([]models.Comme
 	err := session.Limit(query.Limit, query.Offset).Find(&result)
 	return result, err
 }
+
+// Count comments
+func (repo *CommentRepository) Count(query *models.CommentQuery) (int64, error) {
+	session := repo.engine.NewSession()
+	if query.Id != "" {
+		session = session.Where("Id = ?", query.Id)
+	}
+	if query.Uri != "" {
+		session = session.Where("Uri = ?", query.Uri)
+	}
+	if query.Author != "" {
+		session = session.Where("Author = ?", query.Author)
+	}
+	if query.Email != "" {
+		session = session.Where("Email = ?", query.Email)
+	}
+	cmt := new(models.Comment)
+	total, err := session.Count(cmt)
+	return total, err
+}

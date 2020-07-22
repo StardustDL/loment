@@ -8,6 +8,7 @@ Loment is a Light cOmMENT service.
 
 - **Post** `/` with *Comment* body: Create comment, return id
 - **Post** `/query` with *CommentQuery* body: Query comments, return list of comments
+- - **Post** `/count` with *CommentQuery* body: Query and count comments, return the number of comments
 - **Get** `/id`: Get comment by id, return comment
 - **Delete** `/id`: Delete comment by id, return if done
 - **Put** `/id` with *Comment* body: Update comment by id, return if done
@@ -57,6 +58,8 @@ public interface ILomentService
     Task<string?> Create(Comment comment, CancellationToken cancellationToken = default);
 
     Task<IList<Comment>> Query(CommentQuery query, CancellationToken cancellationToken = default);
+
+    Task<long> Count(CommentQuery query, CancellationToken cancellationToken = default);
 
     Task<Comment?> Get(string id, CancellationToken cancellationToken = default);
 

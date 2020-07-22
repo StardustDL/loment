@@ -83,6 +83,22 @@ func (handler *CommentHandler) Update(w http.ResponseWriter, r *http.Request) {
 	respondOkWithObject(w, true)
 }
 
+// Count comments return number
+func (handler *CommentHandler) Count(w http.ResponseWriter, r *http.Request) {
+	cmt := new(models.CommentQuery)
+	err := json.NewDecoder(r.Body).Decode(cmt)
+	if err != nil {
+		respondErrWithError(w, err)
+		return
+	}
+	total, err := handler.Repo.Count(cmt)
+	if err != nil {
+		respondErrWithError(w, err)
+		return
+	}
+	respondOkWithObject(w, total)
+}
+
 // Query query comments return list of comment
 func (handler *CommentHandler) Query(w http.ResponseWriter, r *http.Request) {
 	cmt := new(models.CommentQuery)
