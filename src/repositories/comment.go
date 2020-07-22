@@ -104,6 +104,7 @@ func (repo *CommentRepository) Query(query *models.CommentQuery) ([]models.Comme
 	if query.Email != "" {
 		session = session.Where("Email = ?", query.Email)
 	}
+	session = session.Desc("ModificationTime")
 	if query.Limit == 0 {
 		query.Limit = 10
 	}
