@@ -55,7 +55,7 @@ jobs:
         username: StardustDL
         password: ${{ secrets.PA_TOKEN }}
         registry: docker.pkg.github.com
-        repository: stardustdl/loment/service
+        repository: stardustdl/loment/loment-service
         tag_with_ref: true
         dockerfile: ./Dockerfile
   pub-pkgs:
