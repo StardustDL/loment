@@ -127,7 +127,10 @@ func (repo *CommentRepository) Count(query *models.CommentQuery) (int64, error) 
 	if query.Email != "" {
 		session = session.Where("Email = ?", query.Email)
 	}
+	if query.Limit == 0 {
+		query.Limit = 10
+	}
 	cmt := new(models.Comment)
-	total, err := session.Count(cmt)
+	total, err := session.Limit(query.Limit, query.Offset).Count(cmt)
 	return total, err
 }
